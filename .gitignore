@@ -1,0 +1,5 @@
+# Object files
+*.o
+
+# Hello World
+helloworld/main

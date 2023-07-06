@@ -1,5 +1,7 @@
 # Object files
 *.o
 
-# Executables
-*/main
+# Executables (but not folder of same name)
+main
+test
+!test/

@@ -6,3 +6,6 @@ What is the largest prime factor of the number 600851475143?
 
 ## Build
 gcc main.c primes.c -o main
+
+## Tests
+gcc test.c ../primes.c -o test -l cmocka

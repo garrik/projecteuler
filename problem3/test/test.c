@@ -1,0 +1,44 @@
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <setjmp.h>
+#include <cmocka.h>
+#include <stdbool.h>
+
+#include "../primes.h"
+
+// the following variables are used for caclulations in primes.c
+size_t primes_length = 10;
+long int primes[10] = {};
+long int primes_count = 0;
+
+/* A test case that does nothing and succeeds. */
+static void null_test_success(void **state) {
+    (void) state; /* unused */
+}
+
+static void test_first_primes(void **state) {
+    assert_true(is_prime(1));
+    assert_true(is_prime(2));
+    assert_true(is_prime(3));
+    assert_true(is_prime(5));
+    assert_true(is_prime(7));
+    assert_true(is_prime(11));
+}
+
+static void test_first_not_primes(void **state) {
+    assert_false(is_prime(0));
+    assert_false(is_prime(4));
+    assert_false(is_prime(6));
+    assert_false(is_prime(8));
+    assert_false(is_prime(10));
+}
+
+int main(void) {
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(null_test_success),
+        cmocka_unit_test(test_first_primes),
+        cmocka_unit_test(test_first_not_primes)
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
+}

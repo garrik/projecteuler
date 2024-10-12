@@ -1,70 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define TARGET 600851475143
-#define NOT_PRIME_NUM 0
-#define SIZE 1000
+#include "primes.h"
 
-int is_prime(long int n)
-{
-    if (n == 0) {
-        return false;
-    }
-    else if (n < 4) {
-        return true;
-    }
-    else if (n % 2 == 0) {
-        return false;
-    }
-    for (long int i = 3; i < n; i += 2) {
-        if (n % i == 0) {
-            return false;
-        }
-    }
-    return true;
-}
+#define TARGET 600851475143 // number of which we want the largest prime factor
+#define SIZE 1000 // maximum quantity of primes we can consider
 
+// the following variables are used for caclulations in primes.c
+size_t primes_length = SIZE;
 long int primes[SIZE] = {};
-size_t primes_count = 0;
-long int get_max_prime()
-{
-    return primes_count > 0 ? primes[primes_count - 1] : NOT_PRIME_NUM;
-}
-
-long int look_for_next_prime_from(long int begin)
-{
-    long int i;
-    for (i = begin + 1; begin <= i; i += 1) {
-        if (is_prime(i)) {
-            printf("new prime found: %ld\n", i);
-            return i;
-        }
-    }
-    return NOT_PRIME_NUM;
-}
-
-void add_to_primes(long int n)
-{
-    // todo: increase array size when it is not big enough
-    primes[primes_count++] = n;
-}
-
-long int get_next_prime(int index)
-{
-    // printf("get next prime at %d\n", index);
-    if (index >= SIZE) {
-        return NOT_PRIME_NUM; // primes array overflow
-    }
-    long int prime = primes[index];
-    if (prime == NOT_PRIME_NUM) {
-        long int max_prime = get_max_prime();
-        prime = look_for_next_prime_from(max_prime);
-        if (prime != NOT_PRIME_NUM) {
-            add_to_primes(prime);
-        }
-    }
-    return prime;
-}
+long int primes_count = 0;
 
 long int dividers[SIZE] = {};
 size_t dividers_count = 0;

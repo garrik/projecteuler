@@ -5,7 +5,7 @@
 #include "primes.h"
 
 // naive implementation that divides for every number lesser than n
-int is_prime_naive(long int n){
+int is_prime_naive(const long int n){
     if (n < 2) {
         return false;
     }
@@ -19,7 +19,7 @@ int is_prime_naive(long int n){
 
 // optimized implementation using sieve of erathostenes
 // explanation https://math.stackexchange.com/questions/3875424/sieve-of-eratosthenes-why-can-we-stop-at-the-sqrt-n
-int is_prime(long int n){
+int is_prime(const long int n){
     if (n < 2) {
         return false;
     }
@@ -36,25 +36,25 @@ long int get_max_prime()
     return primes_length > 0 ? primes[primes_length - 1] : NOT_PRIME_NUM;
 }
 
-long int look_for_next_prime_from(long int begin)
+long int look_for_next_prime_from(const long int begin)
 {
     long int i;
     for (i = begin + 1; begin <= i; i += 1) {
         if (is_prime(i)) {
-            printf("new prime found: %ld\n", i);
+            //printf("new prime found: %ld\n", i);
             return i;
         }
     }
     return NOT_PRIME_NUM;
 }
 
-void add_to_primes(long int n)
+void add_to_primes(const long int n)
 {
     // todo: increase array size when it is not big enough
     primes[primes_length++] = n;
 }
 
-long int get_next_prime(unsigned int index)
+long int get_next_prime(const unsigned int index)
 {
     // printf("get next prime at %d\n", index);
     if (index >= primes_length) {

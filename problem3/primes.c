@@ -3,18 +3,11 @@
 
 #include "primes.h"
 
-int is_prime(long int n)
-{
-    if (n == 0) {
+int is_prime(long int n){
+    if (n < 2) {
         return false;
     }
-    else if (n < 4) {
-        return true;
-    }
-    else if (n % 2 == 0) {
-        return false;
-    }
-    for (long int i = 3; i < n; i += 2) {
+    for (long int i = 2; i < n; i += 1) {
         if (n % i == 0) {
             return false;
         }

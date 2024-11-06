@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "primes.h"
+#include "util.h"
 
 #define TARGET 600851475143 // number of which we want the largest prime factor
 #define SIZE 1000 // maximum quantity of primes we can consider
@@ -26,6 +27,7 @@ int main()
     long int max_divider = 0;
 
     printf("Look for the largest prime factor of the number %lu\n", target);
+    double start_time = get_time();
     // quoziente = target
     for (long int i = 0; i < target; i++) {
         // i e' l'indice dell'array di n primi
@@ -55,7 +57,11 @@ int main()
             max_divider = dividers[i];
         }
     }
+    double end_time = get_time();
 
     printf("The largest prime factor of the number %ld is %ld\n", target, max_divider);
+
+    double elapsed_time = end_time - start_time;
+    printf("Elapsed time is %f seconds\n", elapsed_time);
     return 0;
 }

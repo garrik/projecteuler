@@ -8,7 +8,7 @@ What is the largest prime factor of the number 600851475143?
 Math library needs to be linked using `-lm`, see `man sqrt`.
 `gcc -Wall -Werror -Wextra -pedantic main.c primes.c util.c -lm -o main`
 
-## Manual build of test
+## Manual build for test
 `gcc -Wall -Werror -Wextra -pedantic test.c ../primes.c -o test -l cmocka -lm`
 
 ## CMake build
@@ -27,4 +27,5 @@ cd test
 cmake -S. -B${HOME}/develop/build/projecteuler/problem3_test
 cd ${HOME}/develop/build/projecteuler/problem3_test
 make
+make test
 ```

@@ -8,10 +8,10 @@
 
 // the following variables are used for caclulations in primes.c
 size_t primes_length = SIZE;
-long int primes[SIZE] = {};
+long int primes[SIZE] = {0};
 long int primes_count = 0;
 
-long int dividers[SIZE] = {};
+long int dividers[SIZE] = {0};
 size_t dividers_count = 0;
 void add_to_dividers(long int n)
 {
@@ -19,15 +19,15 @@ void add_to_dividers(long int n)
     dividers[dividers_count++] = n;
 }
 
-int main(int argc, int **argv)
+int main()
 {
-    long int target = TARGET;
+    unsigned long int target = TARGET;
     long int quotient = target;
     long int max_divider = 0;
 
-    printf("Look for the largest prime factor of the number %ld\n", target);
+    printf("Look for the largest prime factor of the number %lu\n", target);
     // quoziente = target
-    for (long int i = 0; i < target; i++) {
+    for (unsigned long int i = 0; i < target; i++) {
         // i e' l'indice dell'array di n primi
         // recupero n primo da $primi (se necessario calcolo il next n primo)
         long int prime = get_next_prime(i);

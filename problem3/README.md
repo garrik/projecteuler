@@ -6,7 +6,7 @@ What is the largest prime factor of the number 600851475143?
 
 ## Build
 Math library needs to be linked using `-lm`, see `man sqrt`.
-`gcc main.c primes.c -lm -o main`
+`gcc -Wall -Werror -Wextra -pedantic main.c primes.c -lm -o main`
 
 ## Tests
-`gcc test.c ../primes.c -o test -l cmocka -lm`
+`gcc -Wall -Werror -Wextra -pedantic test.c ../primes.c -o test -l cmocka -lm`

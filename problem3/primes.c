@@ -54,7 +54,7 @@ void add_to_primes(long int n)
     primes[primes_length++] = n;
 }
 
-long int get_next_prime(int index)
+long int get_next_prime(unsigned int index)
 {
     // printf("get next prime at %d\n", index);
     if (index >= primes_length) {

@@ -15,4 +15,4 @@ long int look_for_next_prime_from(long int begin);
 
 void add_to_primes(long int n);
 
-long int get_next_prime(int index);
+long int get_next_prime(unsigned int index);

@@ -9,7 +9,7 @@
 
 // the following variables are used for caclulations in primes.c
 size_t primes_length = 10;
-long int primes[10] = {};
+long int primes[10] = {0};
 long int primes_count = 0;
 
 /* A test case that does nothing and succeeds. */
@@ -18,6 +18,7 @@ static void null_test_success(void **state) {
 }
 
 static void test_first_primes(void **state) {
+    (void) state; /* unused */
     assert_true(is_prime(2));
     assert_true(is_prime(3));
     assert_true(is_prime(5));
@@ -31,6 +32,7 @@ static void test_first_primes(void **state) {
 }
 
 static void test_first_not_primes(void **state) {
+    (void) state; /* unused */
     assert_false(is_prime(0));
     assert_false(is_prime(1));
     assert_false(is_prime(4));

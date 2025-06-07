@@ -1,6 +1,9 @@
 # Solving Euler problems
 [Project Eurler archive](https://projecteuler.net/archives)
 
+## Build and run tests
+Run the script `./build.sh problem4`
+
 ## Dependencies
 ### cmocka
 `apt install libcmocka0 libcmocka-dev`

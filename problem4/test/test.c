@@ -29,11 +29,18 @@ static void test_not_palindromes(void **state) {
     assert_false(is_palindrome(3224));
 }
 
+static void test_find_largest_palindrome_from_product_of(void **state) {
+    (void) state; /* unused */
+    assert_int_equal(find_largest_palindrome_from_product_of(9, 9), 9);
+    assert_int_equal(find_largest_palindrome_from_product_of(99, 99), 9009);
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(null_test_success),
         cmocka_unit_test(test_palindromes),
-        cmocka_unit_test(test_not_palindromes)
+        cmocka_unit_test(test_not_palindromes),
+        cmocka_unit_test(test_find_largest_palindrome_from_product_of)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }

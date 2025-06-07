@@ -29,10 +29,10 @@ int find_largest_palindrome_from_product_of___wrong(int n, int m) {
         for (int j = m; j > -1; j--) {
             int number = i * j;
             if (is_palindrome(number)) {
-                printf("Found palindrome %d, product of %d and %d\n", number, i, j);
+                // printf("Found palindrome %d, product of %d and %d\n", number, i, j);
                 return number;
             }
-            printf("Not a palindrome %d, product of %d and %d\n", number, i, j);
+            // printf("Not a palindrome %d, product of %d and %d\n", number, i, j);
         }
     }
     return -1;

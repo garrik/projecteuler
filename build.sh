@@ -23,3 +23,15 @@ cmake -S. -B${build_dir} -DCMAKE_BUILD_TYPE=Release
 # build
 cd ${build_dir}
 make -j$(nproc)
+
+if [ $? -eq 0 ]; then
+    echo
+    echo "✅ Build successful"
+    echo
+    if [ -d "test" ]; then
+        echo "Found test directory, running tests..."
+        ctest --test-dir test --output-on-failure
+    else
+        echo "No test directory found, skipping tests"
+    fi
+fi

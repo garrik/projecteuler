@@ -1,0 +1,15 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Linux x64 debug",
+            "description": "Out-of-tree build using Ninja",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/../../build/projecteuler",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ]
+}

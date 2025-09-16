@@ -16,7 +16,7 @@ struct swap_positions {
 
 int solve_problem_for_n();
 
-int factorial(int n);
+unsigned long long factorial(unsigned long long n);
 
 void create_sequences(card sequences[][nn], 
                       int sequence_count);

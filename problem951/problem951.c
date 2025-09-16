@@ -42,10 +42,10 @@ int solve_problem_for_n()
     return 0;
 }
 
-int factorial(int n)
+unsigned long long factorial(unsigned long long n)
 {
     if (n == 0) return 1;
-    int f = 1;
+    unsigned long long f = 1;
     while(n > 1) {
         f *= n;
         n -= 1;
@@ -128,7 +128,6 @@ void create_sequences(card sequences[][nn],
     }
     free(sp);
     free(swap_positions_counts);
-
 }
 
 void init_bi_ri(int bi[], int ri[], int length, int n)

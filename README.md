@@ -17,3 +17,6 @@ https://stackoverflow.com/questions/29945791/undefined-reference-to-cmocka-run-g
 
 E.g.
 `hyperfine --warmup 2 --runs 5 --shell=none ./main`
+
+## Unity unit test framework
+Added as submodule: `git submodule add https://github.com/ThrowTheSwitch/Unity.git unity`

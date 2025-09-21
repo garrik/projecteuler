@@ -1,6 +1,6 @@
 #include "problem951.h"
 
-const int n = 3; // # of red and black cards in the deck
+const int n = 2; // # of red and black cards in the deck
 const int nn = 2 * n; // # of total cards in the deck, i.e. sequence length
 
 int solve_problem_for_n()

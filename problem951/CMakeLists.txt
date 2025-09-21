@@ -10,3 +10,6 @@ add_executable(main
 
 # Build with the highest severity possible
 target_compile_options(main PRIVATE -Wall -Werror -Wextra -pedantic)
+
+# Build test
+add_subdirectory(test)

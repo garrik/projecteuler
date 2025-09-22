@@ -5,6 +5,6 @@
 
 int main()
 {
-    solve_problem_for_n();
+    solve_problem_for_n(4);
     return 0;
 }

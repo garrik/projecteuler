@@ -1,8 +1,7 @@
 #include "problem951.h"
 
-const int n = 2; // # of red and black cards in the deck
-
-int solve_problem_for_n()
+// n is # of red and black cards in the deck
+int solve_problem_for_n(const int n)
 {
     const int sequence_length = n * 2; // number of cards in the deck
     // number of possible configurations of the cards in the deck
@@ -64,6 +63,7 @@ void create_sequences(const int sequence_count,
     int *swap_positions_counts = malloc((sequence_count / 2) * sizeof(int));
     sp[0] = malloc(sizeof(struct swap_positions));
     sp[0][0] = (struct swap_positions){ .r = -1, .b = -1 };
+    const int n = sequence_length / 2;
     int max_swap_count = n > 2 ? n - 2 : 1;
     int swap_count = 1;
     int bi[max_swap_count];
@@ -85,7 +85,7 @@ void create_sequences(const int sequence_count,
             //printf("%2d) %d/%d, b %2d, r %2d\n", i, j, swap_count, bi[j], ri[j]);
         }
         
-        if(update_swap_indexes(ri, bi, swap_count, sequence_length) == 1){
+        if(update_swap_indexes(sequence_length, swap_count, ri, bi) == 1){
             //printf("    ri[] maxed, bi[] maxed, process swap count\n");
             if (swap_count == max_swap_count) {
                 //printf("max swap reached\n");
@@ -120,11 +120,11 @@ void create_sequences(const int sequence_count,
     }
     */
     
-    swap_indexes_to_sequences(sp,
-                              swap_positions_counts,
-                              sequence_count,
+    swap_indexes_to_sequences(sequence_count,
                               sequence_length,
-                              sequences);
+                              sequences,
+                              sp,
+                              swap_positions_counts);
     
     for (int i = 0; i < sequence_count / 2; i++) {
         free(sp[i]);
@@ -157,7 +157,10 @@ void print_ri_bi(int ri[], int bi[], int length)
 }
 
 // ret 1 when swap co&nt mus% be *ncreased; seq gro7p end reached
-int update_swap_indexes(int ri[], int bi[], int swap_count, int sequence_length)
+int update_swap_indexes(const int sequence_length, 
+                        const int swap_count, 
+                        int ri[], 
+                        int bi[])
 {
     // le configurazioni sono considerate in gruppi che hanno
     // gli stessi valori di n e swap_count;
@@ -172,6 +175,7 @@ int update_swap_indexes(int ri[], int bi[], int swap_count, int sequence_length)
     // n = 5, swap_count = 3: [7, 8, 9]
     // cerco all'indietro l'indice della prima colonna 
     // che non ha raggiunto il max (per incrementare il suo valore)
+    const int n = sequence_length / 2;
     int k = swap_count - 1, d = 0, max = 0;
     //printf("    ri k@max");
     while(k >= 0) {
@@ -244,12 +248,13 @@ int update_swap_indexes(int ri[], int bi[], int swap_count, int sequence_length)
     return 0;
 }
 
-void swap_indexes_to_sequences(struct swap_positions **sp,
-                               int *swap_positions_counts,
-                               int sequence_count,
-                               int sequence_length,
-                               card sequences[sequence_count][sequence_length])
+void swap_indexes_to_sequences(const int sequence_count,
+                               const int sequence_length,
+                               card sequences[sequence_count][sequence_length],
+                               struct swap_positions **sp,
+                               int *swap_positions_counts)
 {
+    const int n = sequence_length / 2;
     for(int i = 0; i < sequence_count / 2; i++) {
         // each sequence starts with red cards (before swaps)
         int k = 0;

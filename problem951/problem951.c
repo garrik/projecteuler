@@ -1,7 +1,6 @@
 #include "problem951.h"
 
 const int n = 2; // # of red and black cards in the deck
-const int nn = 2 * n; // # of total cards in the deck, i.e. sequence length
 
 int solve_problem_for_n()
 {
@@ -14,18 +13,19 @@ int solve_problem_for_n()
     card sequences[sequences_count][sequence_length];
     
     printf("Create %d sequences, half of possible configurations\n", sequences_count / 2);
-    create_sequences(sequences,
-                     sequences_count);
+    create_sequences(sequences_count,
+                     sequence_length,
+                     sequences);
     printf("Sequences created\n");
 
-    // print_sequences(sequences,
-    //                 sequences_count,
-    //                 sequence_length);
+    // print_sequences(sequences_count,
+    //                 sequence_length,
+    //                 sequences);
 
     int sequences_fairness[sequences_count];
-    calculate_sequences_fairness(sequences,
-                                 sequences_count,
+    calculate_sequences_fairness(sequences_count,
                                  sequence_length,
+                                 sequences,
                                  sequences_fairness);
     printf("Fairness of sequences calculated\n");
 
@@ -55,8 +55,9 @@ unsigned long long factorial(unsigned long long n)
 
 // Create half of total possible sequences
 // since the other half are symmetric with inverted colors
-void create_sequences(card sequences[][nn], 
-                      int sequence_count)
+void create_sequences(const int sequence_count,
+                      const int sequence_length,
+                      card sequences[sequence_count][sequence_length])
 {
     struct swap_positions **sp;
     sp = malloc((sequence_count / 2) * sizeof(struct swap_positions *));
@@ -84,7 +85,7 @@ void create_sequences(card sequences[][nn],
             //printf("%2d) %d/%d, b %2d, r %2d\n", i, j, swap_count, bi[j], ri[j]);
         }
         
-        if(update_swap_indexes(ri, bi, swap_count) == 1){
+        if(update_swap_indexes(ri, bi, swap_count, sequence_length) == 1){
             //printf("    ri[] maxed, bi[] maxed, process swap count\n");
             if (swap_count == max_swap_count) {
                 //printf("max swap reached\n");
@@ -119,9 +120,11 @@ void create_sequences(card sequences[][nn],
     }
     */
     
-    swap_indexes_to_sequences(sp, swap_positions_counts, 
-                              sequences, 
-                              sequence_count);
+    swap_indexes_to_sequences(sp,
+                              swap_positions_counts,
+                              sequence_count,
+                              sequence_length,
+                              sequences);
     
     for (int i = 0; i < sequence_count / 2; i++) {
         free(sp[i]);
@@ -154,7 +157,7 @@ void print_ri_bi(int ri[], int bi[], int length)
 }
 
 // ret 1 when swap co&nt mus% be *ncreased; seq gro7p end reached
-int update_swap_indexes(int ri[], int bi[], int swap_count)
+int update_swap_indexes(int ri[], int bi[], int swap_count, int sequence_length)
 {
     // le configurazioni sono considerate in gruppi che hanno
     // gli stessi valori di n e swap_count;
@@ -172,7 +175,7 @@ int update_swap_indexes(int ri[], int bi[], int swap_count)
     int k = swap_count - 1, d = 0, max = 0;
     //printf("    ri k@max");
     while(k >= 0) {
-        max = nn - 1 - d;
+        max = sequence_length - 1 - d;
         if (ri[k] == max) {
             //printf(" %d", k);
             k--;
@@ -241,10 +244,11 @@ int update_swap_indexes(int ri[], int bi[], int swap_count)
     return 0;
 }
 
-void swap_indexes_to_sequences(struct swap_positions **sp, 
-                               int *swap_positions_counts, 
-                               card sequences[][nn], 
-                               int sequence_count)
+void swap_indexes_to_sequences(struct swap_positions **sp,
+                               int *swap_positions_counts,
+                               int sequence_count,
+                               int sequence_length,
+                               card sequences[sequence_count][sequence_length])
 {
     for(int i = 0; i < sequence_count / 2; i++) {
         // each sequence starts with red cards (before swaps)
@@ -263,7 +267,7 @@ void swap_indexes_to_sequences(struct swap_positions **sp,
         }
         // each sequence ends with black cards (before swaps)
         k = 0;
-        for(int j = n; j < nn; j++){
+        for(int j = n; j < sequence_length; j++){
             // look for the indexes of card swap in sp[i][]
             if (k < swap_positions_counts[i] && j == sp[i][k].r) {
                 // swap index found
@@ -278,14 +282,14 @@ void swap_indexes_to_sequences(struct swap_positions **sp,
     }
 }
 
-void print_sequences(card sequences[][nn], 
-                     int sequence_count, 
-                     int card_count)
+void print_sequences(int sequence_count,
+                     int sequence_length,
+                     card sequences[sequence_count][sequence_length])
 {
     printf("show sequences\n");
     for(int i = 0; i < sequence_count / 2; i++) {
         printf("%d) ", i + 1);
-        print_cards(sequences[i], card_count);
+        print_cards(sequences[i], sequence_length);
         printf("\n");
     }
 }
@@ -303,9 +307,9 @@ char t(card c)
     return c == red_card ? 'R' : c == black_card ? 'B' : '?';
 }
 
-void calculate_sequences_fairness(card sequences[][nn],
-                                  int sequences_count,
+void calculate_sequences_fairness(int sequence_count,
                                   int sequence_length,
+                                  card sequences[sequence_count][sequence_length],
                                   int sequences_fairness[])
 {
     struct node nodes[NODES_MAX_CAPACITY];
@@ -314,7 +318,7 @@ void calculate_sequences_fairness(card sequences[][nn],
     const int sequence_card_index = 0;
     const player player = player_one;
     const int double_draw = 0;
-    for (int i = 0; i < sequences_count / 2; i++) {
+    for (int i = 0; i < sequence_count / 2; i++) {
         int node_index = 0;
         struct node *prev_node = NULL;
         create_games_tree(sequences[i], sequence_length, sequence_card_index,

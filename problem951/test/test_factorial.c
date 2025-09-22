@@ -19,20 +19,21 @@ void test_function_should_calc_factorials(void) {
 }
 
 void test_create_sequences_for_n_2(void) {
+    const int sequence_count = 3;
+    const int sequence_length = 4;
     card sequences_expected[3][4] = {
         { red_card, red_card, black_card, black_card },
         { black_card, red_card, red_card, black_card },
         { black_card, red_card, black_card, red_card }
     };
 
-    card sequences[3][4];
-    create_sequences(sequences, 6);
+    card sequences[sequence_count][sequence_length];
+    create_sequences(sequence_count * 2, sequence_length, sequences);
 
-    for (int i = 0; i < 3; i++) {
-        TEST_ASSERT_EQUAL(sequences[i][0], sequences_expected[i][0]);
-        TEST_ASSERT_EQUAL(sequences[i][1], sequences_expected[i][1]);
-        TEST_ASSERT_EQUAL(sequences[i][2], sequences_expected[i][2]);
-        TEST_ASSERT_EQUAL(sequences[i][3], sequences_expected[i][3]);
+    for (int i = 0; i < sequence_count; i++) {
+        for (int j = 0; j < sequence_length; j++) {
+            TEST_ASSERT_EQUAL(sequences[i][j], sequences_expected[i][j]);
+        }
     }
 }
 

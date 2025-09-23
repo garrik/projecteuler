@@ -37,11 +37,38 @@ void test_create_sequences_for_n_2(void) {
     }
 }
 
+void test_create_sequences_for_n_3(void) {
+    const int sequence_count = 10;
+    const int sequence_length = 6;
+    card sequences_expected[10][6] = {
+        { red_card, red_card, red_card, black_card, black_card, black_card },
+        { black_card, red_card, red_card, red_card, black_card, black_card },
+        { black_card, red_card, red_card, black_card, red_card, black_card },
+        { black_card, red_card, red_card, black_card, black_card, red_card },
+        { red_card, black_card, red_card, red_card, black_card, black_card },
+        { red_card, black_card, red_card, black_card, red_card, black_card },
+        { red_card, black_card, red_card, black_card, black_card, red_card },
+        { red_card, red_card, black_card, red_card, black_card, black_card },
+        { red_card, red_card, black_card, black_card, red_card, black_card },
+        { red_card, red_card, black_card, black_card, black_card, red_card }
+    };
+
+    card sequences[sequence_count][sequence_length];
+    create_sequences(sequence_count, sequence_length, sequences);
+
+    for (int i = 0; i < sequence_count; i++) {
+        for (int j = 0; j < sequence_length; j++) {
+            TEST_ASSERT_EQUAL(sequences[i][j], sequences_expected[i][j]);
+        }
+    }
+}
+
 // not needed when using generate_test_runner.rb
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_function_should_calc_factorials);
     RUN_TEST(test_create_sequences_for_n_2);
+    RUN_TEST(test_create_sequences_for_n_3);
     return UNITY_END();
 }
 

@@ -28,7 +28,7 @@ void test_create_sequences_for_n_2(void) {
     };
 
     card sequences[sequence_count][sequence_length];
-    create_sequences(sequence_count * 2, sequence_length, sequences);
+    create_sequences(sequence_count, sequence_length, sequences);
 
     for (int i = 0; i < sequence_count; i++) {
         for (int j = 0; j < sequence_length; j++) {

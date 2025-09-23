@@ -1,3 +1,4 @@
+#include "fs_util.h"
 #include "problem951.h"
 
 // n is # of red and black cards in the deck
@@ -21,9 +22,11 @@ int solve_problem_for_n(const int n)
     // print_sequences(sequence_count,
     //                 sequence_length,
     //                 sequences);
+    save_sequences(n, sequence_count, sequence_length, sequences);
 
     int sequences_fairness[sequence_count];
-    calculate_sequences_fairness(sequence_count,
+    calculate_sequences_fairness(n,
+                                 sequence_count,
                                  sequence_length,
                                  sequences,
                                  sequences_fairness);
@@ -36,9 +39,6 @@ int solve_problem_for_n(const int n)
     fairness *= 2;
     printf("F(%d) = %d\n", n, fairness);
 
-    //printf("\nTree structure:\n");
-    //print_games_tree(&nodes[0], 0);
-    //export_tree_to_dot_stdout(&nodes[0]);
     return 0;
 }
 
@@ -313,7 +313,8 @@ char t(card c)
     return c == red_card ? 'R' : c == black_card ? 'B' : '?';
 }
 
-void calculate_sequences_fairness(int sequence_count,
+void calculate_sequences_fairness(const int n,
+                                  int sequence_count,
                                   int sequence_length,
                                   card sequences[sequence_count][sequence_length],
                                   int sequences_fairness[])
@@ -330,6 +331,11 @@ void calculate_sequences_fairness(int sequence_count,
         create_games_tree(sequences[i], sequence_length, sequence_card_index,
                           nodes, NODES_MAX_CAPACITY, &node_index,
                           prev_node, player, double_draw);
+
+        // printf("\nTree structure:\n");
+        // print_games_tree(&nodes[0], 0);
+        // https://dreampuf.github.io/GraphvizOnline/
+        save_tree_to_graphviz_dot_file(n, i, sequence_length, sequences[i], &nodes[0]);
 
         int player_one_wins = 0, player_two_wins = 0;
         count_wins_per_player(&nodes[0], 0, sequence_length - 1,
@@ -381,14 +387,14 @@ void create_games_tree(const card *sequence, const int sequence_card_count, cons
     const int next_player_double_draw = !double_draw && draw == next_draw;
     // branch for alternating player
     const player next_player = current_player == player_one ? player_two : player_one;
-    //printf("Alternate player: left branch\n");
+    //printf("Alternate player: left branch (coin lands tail)\n");
     (*node_index)++;
     create_games_tree(sequence, sequence_card_count, next_sequence_card_index,
                       nodes, nodes_length, node_index,
                       current_node, next_player, 0);
     // branch for second draw of the same player
     if (next_player_double_draw){
-        //printf("Same player: right branch\n");
+        //printf("Same player: right branch (coin lands head)\n");
         (*node_index)++;
         create_games_tree(sequence, sequence_card_count, next_sequence_card_index,
                           nodes, nodes_length, node_index,

@@ -4,6 +4,8 @@ project("Euler problem 951" C)
 
 add_executable(main
     main.c
+    fs_util.c
+    fs_util.h
     problem951.c
     problem951.h
 )

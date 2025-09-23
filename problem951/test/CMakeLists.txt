@@ -8,6 +8,8 @@ add_executable(test_problem
     ../../unity/src/unity_internals.h
     ../../unity/src/unity.c
     ../../unity/src/unity.h
+    ../fs_util.c
+    ../fs_util.h
     ../problem951.c
     ../problem951.h
 )

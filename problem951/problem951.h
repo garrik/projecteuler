@@ -65,7 +65,8 @@ void count_wins_per_player(const struct node *node,
                            int *player_one_wins, 
                            int *player_two_wins);
 
-void calculate_sequences_fairness(int sequence_count,
+void calculate_sequences_fairness(const int n,
+                                  int sequence_count,
                                   int sequence_length,
                                   card sequences[sequence_count][sequence_length],
                                   int sequences_fairness[]);

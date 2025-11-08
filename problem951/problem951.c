@@ -65,10 +65,10 @@ void create_sequences(const int sequence_count,
     sp[0] = malloc(sizeof(struct swap_positions));
     sp[0][0] = (struct swap_positions){ .r = -1, .b = -1 };
     const int n = sequence_length / 2;
-    int max_swap_count = n > 2 ? n - 2 : 1;
-    int swap_count = 1;
+    const int max_swap_count = n > 2 ? n - 2 : 1;
     int bi[max_swap_count];
     int ri[max_swap_count];
+    int swap_count = 1;
     int increase_swap_count_flag = 0;
     // init 1st sequence for given swap_count
     init_bi_ri(bi, ri, swap_count, n);
@@ -134,6 +134,12 @@ void create_sequences(const int sequence_count,
     free(swap_positions_counts);
 }
 
+// init array of index of cards to swap for both colors
+// e.g.
+// n = 2, swap_count = 1 RRBB     -> bi[0] = 0, ri[0] = 2 -> swap R@0 with B@2 -> BRRB
+// n = 3, swap_count = 1 RRRBBB   -> bi[0] = 0, ri[0] = 3 -> swap R@0 with B@3 -> BRRRBB
+// n = 4, swap_count = 1 RRRRBBBB -> bi[0] = 0, ri[0] = 4 -> swap R@0 with B@4 -> BRRRRBBB
+// n = 4, swap_count = 2 RRRRBBBB -> bi[0] = 0, bi[1] = 1, ri[0] = 4, ri[1] = 5 -> swap R@0 with B@4 -> BRRRRBBB
 void init_bi_ri(int bi[], int ri[], int length, int n)
 {
     bi[0] = 0;

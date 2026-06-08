@@ -51,9 +51,10 @@ struct node {
     card draw;
 };
 
-void create_games_tree(const card *sequence, const int sequence_card_count, const int sequence_card_index,
-                       struct node *nodes, const int nodes_length, int *node_index,
-                       struct node *prev_node, const player current_player, const int double_draw);
+void create_games_trees(const int sequence_length, const card sequence[sequence_length], 
+                        const int sequence_index,
+                        const int nodes_length, struct node nodes[nodes_length], int *node_index,
+                        struct node *prev_node, const player current_player, const int double_draw);
 
 void print_games_tree(struct node *node, int depth);
 

@@ -328,15 +328,15 @@ void calculate_sequences_fairness(const int n,
     struct node nodes[NODES_MAX_CAPACITY];
 
     //print_cards(sequences[0], sequence_length);
-    const int sequence_card_index = 0;
+    const int sequence_index = 0;
     const player player = player_one;
     const int double_draw = 0;
     for (int i = 0; i < sequence_count; i++) {
         int node_index = 0;
         struct node *prev_node = NULL;
-        create_games_tree(sequences[i], sequence_length, sequence_card_index,
-                          nodes, NODES_MAX_CAPACITY, &node_index,
-                          prev_node, player, double_draw);
+        create_games_trees(sequence_length, sequences[i], sequence_index,
+                           NODES_MAX_CAPACITY, nodes, &node_index,
+                           prev_node, player, double_draw);
 
         // printf("\nTree structure:\n");
         // print_games_tree(&nodes[0], 0);
@@ -354,16 +354,19 @@ void calculate_sequences_fairness(const int n,
     }
 }
 
-void create_games_tree(const card *sequence, const int sequence_card_count, const int sequence_card_index,
-                       struct node *nodes, const int nodes_length, int *node_index,
-                       struct node *prev_node, const player current_player, const int double_draw)
+
+void create_games_trees(const int sequence_length, const card sequence[sequence_length],
+                        const int sequence_index,
+                        const int nodes_length, struct node nodes[nodes_length], int *node_index,
+                        struct node *prev_node, const player current_player, const int double_draw)
 {
-    if (sequence_card_index == sequence_card_count) {
+    
+    if (sequence_index == sequence_length) {
         // printf("End of card sequence\n");
         return;
     }
     
-    const card draw = sequence[sequence_card_index];
+    const card draw = sequence[sequence_index];
     struct node *current_node = &nodes[*node_index];
 
     current_node->left = NULL;
@@ -384,27 +387,27 @@ void create_games_tree(const card *sequence, const int sequence_card_count, cons
     }
 
     // attempt to process next card
-    const int next_sequence_card_index = sequence_card_index + 1;
-    if (next_sequence_card_index >= sequence_card_count) {
+    const int next_sequence_index = sequence_index + 1;
+    if (next_sequence_index >= sequence_length) {
         // printf("End of card sequence\n");
         return;
     }
-    const card next_draw = sequence[next_sequence_card_index];
+    const card next_draw = sequence[next_sequence_index];
     const int next_player_double_draw = !double_draw && draw == next_draw;
     // branch for alternating player
     const player next_player = current_player == player_one ? player_two : player_one;
     //printf("Alternate player: left branch (coin lands tail)\n");
     (*node_index)++;
-    create_games_tree(sequence, sequence_card_count, next_sequence_card_index,
-                      nodes, nodes_length, node_index,
-                      current_node, next_player, 0);
+    create_games_trees(sequence_length, sequence, next_sequence_index,
+                       nodes_length, nodes, node_index,
+                       current_node, next_player, 0);
     // branch for second draw of the same player
     if (next_player_double_draw){
         //printf("Same player: right branch (coin lands head)\n");
         (*node_index)++;
-        create_games_tree(sequence, sequence_card_count, next_sequence_card_index,
-                          nodes, nodes_length, node_index,
-                          current_node, current_player, 1);
+        create_games_trees(sequence_length, sequence, next_sequence_index,
+                           nodes_length, nodes, node_index,
+                           current_node, current_player, 1);
     }
 }
 

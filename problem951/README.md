@@ -20,6 +20,8 @@ You are also given `F(8) = 11892`.
 Find `F(26)`.
 
 ## Notes
+Print the graphviz files and see [graph online](https://dreampuf.github.io/GraphvizOnline)
+
 ### combinations for n = 2 (6)
 
 combination | # swap | swap index | note

@@ -4,7 +4,8 @@ project("Euler problem 951 test" C)
 
 # Build the test
 add_executable(test_problem
-    test_factorial.c
+    test_game_tree.c
+#    test_factorial.c
     ../../unity/src/unity_internals.h
     ../../unity/src/unity.c
     ../../unity/src/unity.h

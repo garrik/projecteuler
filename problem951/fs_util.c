@@ -56,7 +56,7 @@ void save_tree_to_graphviz_dot_file(const int n,
                                     const int sequence_index,
                                     int sequence_length,
                                     card sequence[sequence_length],
-                                    struct node *root)
+                                    struct player_turn* root)
 {
     char filepath[512];
     sprintf(filepath, "solution_for_n_%d/game_tree_%d.dot.gv", n, sequence_index);
@@ -81,7 +81,7 @@ void save_tree_to_graphviz_dot_file(const int n,
     }
 }
 
-void save_graphviz_dot_format(struct node *root, FILE *file)
+void save_graphviz_dot_format(struct player_turn* root, FILE* file)
 {
     if (root == NULL) return;
 
@@ -89,8 +89,8 @@ void save_graphviz_dot_format(struct node *root, FILE *file)
     fprintf(file, "  node [shape=ellipse, style=filled, fillcolor=lightgray];\n");
 
     // BFS
-    struct node *queue[NODES_MAX_CAPACITY];
-    int ids[NODES_MAX_CAPACITY];  // node ID
+    struct player_turn* queue[TURNS_MAX];
+    int ids[TURNS_MAX];  // node ID
     int front = 0, rear = 0;
 
     queue[rear] = root;
@@ -100,7 +100,7 @@ void save_graphviz_dot_format(struct node *root, FILE *file)
     int current_id = 1; // next available ID
 
     while (front < rear) {
-        struct node *curr = queue[front];
+        struct player_turn* curr = queue[front];
         int curr_id = ids[front];
         front++;
 
@@ -111,7 +111,7 @@ void save_graphviz_dot_format(struct node *root, FILE *file)
                t(curr->draw));
 
         // Left child
-        if (curr->left && rear < NODES_MAX_CAPACITY) {
+        if (curr->left && rear < TURNS_MAX) {
             int left_id = current_id++;
             fprintf(file, "  node%d -> node%d [label=\"L\"];\n", curr_id, left_id);
 
@@ -121,7 +121,7 @@ void save_graphviz_dot_format(struct node *root, FILE *file)
         }
 
         // Right child
-        if (curr->right && rear < NODES_MAX_CAPACITY) {
+        if (curr->right && rear < TURNS_MAX) {
             int right_id = current_id++;
             fprintf(file, "  node%d -> node%d [label=\"R\"];\n", curr_id, right_id);
 

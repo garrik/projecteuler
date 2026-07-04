@@ -15,6 +15,6 @@ void save_tree_to_graphviz_dot_file(const int n,
                                     const int sequence_index,
                                     int sequence_length,
                                     card sequence[sequence_length],
-                                    struct node *root);
+                                    struct player_turn* root);
 
-void save_graphviz_dot_format(struct node *root, FILE *file);
+void save_graphviz_dot_format(struct player_turn* root, FILE* file);

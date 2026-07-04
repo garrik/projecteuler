@@ -1,9 +1,10 @@
 #pragma once
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NODES_MAX_CAPACITY 1000
+#define TURNS_MAX 1000
 
 typedef enum { black_card, red_card, none } card;
 struct swap_positions {
@@ -27,8 +28,8 @@ int update_swap_indexes(const int sequence_length,
 void swap_indexes_to_sequences(const int sequence_count,
                                const int sequence_length,
                                card sequences[sequence_count][sequence_length],
-                               struct swap_positions **sp,
-                               int *swap_positions_counts);
+                               struct swap_positions** sp,
+                               int* swap_positions_counts);
 
 void init_bi_ri(int bi[], int ri[], int length, int n);
 
@@ -44,27 +45,26 @@ void print_cards(card cards[],
                  int card_count);
 
 typedef enum { player_one, player_two } player;
-struct node {
-    struct node *left;
-    struct node *right;
+struct player_turn {
+    struct player_turn* left;
+    struct player_turn* right;
     player player;
     card draw;
+    bool is_double_draw;
 };
 
 void create_games_trees(const int sequence_length, const card sequence[sequence_length], 
-                        const int sequence_index,
-                        const int nodes_length, struct node nodes[nodes_length], int *node_index,
-                        struct node *prev_node, const player current_player, const int double_draw);
+                        const int turns_length, struct player_turn turns[turns_length]);
 
-void print_games_tree(struct node *node, int depth);
+void print_games_tree(struct player_turn* node, int depth);
 
-void export_tree_to_dot_stdout(struct node *root);
+void export_tree_to_dot_stdout(struct player_turn* root);
 
-void count_wins_per_player(const struct node *node,
+void count_wins_per_player(const struct player_turn *turn,
                            const int depth,
                            const int max_depth,
-                           int *player_one_wins, 
-                           int *player_two_wins);
+                           int* player_one_wins,
+                           int* player_two_wins);
 
 void calculate_sequences_fairness(const int n,
                                   int sequence_count,

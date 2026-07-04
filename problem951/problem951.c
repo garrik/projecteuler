@@ -325,27 +325,20 @@ void calculate_sequences_fairness(const int n,
                                   card sequences[sequence_count][sequence_length],
                                   int sequences_fairness[])
 {
-    struct node nodes[NODES_MAX_CAPACITY];
+    struct player_turn turns[TURNS_MAX];
 
     //print_cards(sequences[0], sequence_length);
-    const int sequence_index = 0;
-    const player player = player_one;
-    const int double_draw = 0;
     for (int i = 0; i < sequence_count; i++) {
-        int node_index = 0;
-        struct node *prev_node = NULL;
-        create_games_trees(sequence_length, sequences[i], sequence_index,
-                           NODES_MAX_CAPACITY, nodes, &node_index,
-                           prev_node, player, double_draw);
+        create_games_trees(sequence_length, sequences[i], TURNS_MAX, turns);
 
         // printf("\nTree structure:\n");
         // print_games_tree(&nodes[0], 0);
         // https://dreampuf.github.io/GraphvizOnline/
-        save_tree_to_graphviz_dot_file(n, i, sequence_length, sequences[i], &nodes[0]);
+        save_tree_to_graphviz_dot_file(n, i, sequence_length, sequences[i], &turns[0]);
 
         int player_one_wins = 0, player_two_wins = 0;
-        count_wins_per_player(&nodes[0], 0, sequence_length - 1,
-                            &player_one_wins, &player_two_wins);
+        count_wins_per_player(&turns[0], 0, sequence_length - 1,
+                              &player_one_wins, &player_two_wins);
         sequences_fairness[i] = player_one_wins == player_two_wins;
         printf("%d) Sequence ", i + 1);
         print_cards(sequences[i], sequence_length);
@@ -355,63 +348,92 @@ void calculate_sequences_fairness(const int n,
 }
 
 
+// each sequence of cards generates multiple games 
+// when there is a chance of double draw, two different games are possible
+// each game is made of a unique sequence of turns
+// the turns are identified by the player and the card drawn
 void create_games_trees(const int sequence_length, const card sequence[sequence_length],
-                        const int sequence_index,
-                        const int nodes_length, struct node nodes[nodes_length], int *node_index,
-                        struct node *prev_node, const player current_player, const int double_draw)
+                        const int turns_length, struct player_turn turns[turns_length])
 {
-    
-    if (sequence_index == sequence_length) {
-        // printf("End of card sequence\n");
-        return;
-    }
-    
-    const card draw = sequence[sequence_index];
-    struct node *current_node = &nodes[*node_index];
+    int node_index = 0;
+    int card_index = 0;
+    struct player_turn* prev_node = NULL;
+    // keep track of last turns for each game to complete all possible games
+    struct player_turn* last_turns[TURNS_MAX] = { 0 };
+    int last_turns_length = 1;
+    while(card_index < sequence_length) {
+        // current player draw
+        const card draw = sequence[card_index];
 
-    current_node->left = NULL;
-    current_node->right = NULL;
-    current_node->draw = draw;
-    current_node->player = current_player;
-    // printf("Player %d drew %c (node[%d])\n", 
-    //        current_player == player_one ? 1 : 2, 
-    //        t(draw), *node_index);
-    
-    if (prev_node) {
-        if (double_draw) {
-            prev_node->right = current_node;
-        }
-        else {
-            prev_node->left = current_node;
-        }
-    }
+        int next_last_turns_length = last_turns_length;
+        for (int i = 0; i < last_turns_length; i++) {
+            // select last turn of some game
+            prev_node = last_turns[i];
 
-    // attempt to process next card
-    const int next_sequence_index = sequence_index + 1;
-    if (next_sequence_index >= sequence_length) {
-        // printf("End of card sequence\n");
-        return;
-    }
-    const card next_draw = sequence[next_sequence_index];
-    const int next_player_double_draw = !double_draw && draw == next_draw;
-    // branch for alternating player
-    const player next_player = current_player == player_one ? player_two : player_one;
-    //printf("Alternate player: left branch (coin lands tail)\n");
-    (*node_index)++;
-    create_games_trees(sequence_length, sequence, next_sequence_index,
-                       nodes_length, nodes, node_index,
-                       current_node, next_player, 0);
-    // branch for second draw of the same player
-    if (next_player_double_draw){
-        //printf("Same player: right branch (coin lands head)\n");
-        (*node_index)++;
-        create_games_trees(sequence_length, sequence, next_sequence_index,
-                           nodes_length, nodes, node_index,
-                           current_node, current_player, 1);
+            // set variables dependant on prev turn
+            player current_player = prev_node == NULL ? player_one :
+                                    prev_node->player == player_one ? player_two : player_one;
+            bool prev_double_draw = prev_node == NULL ? false : prev_node->is_double_draw;
+            bool is_double_draw;
+
+            // detect double draw possibility
+            if (prev_node && !prev_double_draw) {
+                if (prev_node->draw == draw) {
+                    is_double_draw = true;
+                }
+                else {
+                    is_double_draw = false;
+                }
+            }
+            else {
+                is_double_draw = false;
+            }
+
+            // init game tree double draw node (right branch)
+            if (is_double_draw) {
+                struct player_turn *current_node = &turns[node_index];
+                current_node->left = NULL;
+                current_node->right = NULL;
+                current_node->draw = draw; // equal to prev
+                current_node->player = prev_node->player;
+                current_node->is_double_draw = true;
+                // go to next node
+                node_index++;
+
+                // double draws follow the right branch
+                if (prev_node) {
+                    prev_node->right = current_node;
+                }
+
+                // a new game sequence starts, keep track of last turn
+                last_turns[next_last_turns_length] = current_node;
+                next_last_turns_length++;
+            }
+
+            // init game tree regular node (left branch)
+            struct player_turn *current_node = &turns[node_index];
+            current_node->left = NULL;
+            current_node->right = NULL;
+            current_node->draw = draw;
+            current_node->player = current_player;
+            current_node->is_double_draw = false;
+            // go to next node
+            node_index++;
+
+            // regular draws follow the left branch
+            if (prev_node) {
+                prev_node->left = current_node;
+            }
+
+            last_turns[i] = current_node;
+        }
+
+        last_turns_length = next_last_turns_length;
+        card_index++;
     }
 }
 
-void print_games_tree(struct node *node, int depth)
+void print_games_tree(struct player_turn *node, int depth)
 {
     if (node == NULL) {
         return;
@@ -431,18 +453,18 @@ void print_games_tree(struct node *node, int depth)
     print_games_tree(node->right, depth + 1);
 }
 
-void count_wins_per_player(const struct node *node,
+void count_wins_per_player(const struct player_turn* turn,
                            const int depth,
                            const int max_depth,
-                           int *player_one_wins, 
-                           int *player_two_wins)
+                           int* player_one_wins,
+                           int* player_two_wins)
 {
-    if (node == NULL) {
+    if (turn == NULL) {
         return;
     }
 
     if (depth == max_depth) {
-        if (node->player == player_one) {
+        if (turn->player == player_one) {
             (*player_one_wins)++;
         }
         else {
@@ -450,13 +472,13 @@ void count_wins_per_player(const struct node *node,
         }
     }
 
-    count_wins_per_player(node->left, depth + 1, max_depth,
-                      player_one_wins, player_two_wins);
-    count_wins_per_player(node->right, depth + 1, max_depth,
-                      player_one_wins, player_two_wins);
+    count_wins_per_player(turn->left, depth + 1, max_depth,
+                          player_one_wins, player_two_wins);
+    count_wins_per_player(turn->right, depth + 1, max_depth,
+                          player_one_wins, player_two_wins);
 }
 
-void export_tree_to_dot_stdout(struct node *root)
+void export_tree_to_dot_stdout(struct player_turn *root)
 {
     if (root == NULL) return;
 
@@ -464,8 +486,8 @@ void export_tree_to_dot_stdout(struct node *root)
     printf("  node [shape=ellipse, style=filled, fillcolor=lightgray];\n");
 
     // BFS
-    struct node *queue[NODES_MAX_CAPACITY];
-    int ids[NODES_MAX_CAPACITY];  // node ID
+    struct player_turn *queue[TURNS_MAX];
+    int ids[TURNS_MAX];  // node ID
     int front = 0, rear = 0;
 
     queue[rear] = root;
@@ -475,7 +497,7 @@ void export_tree_to_dot_stdout(struct node *root)
     int current_id = 1; // next available ID
 
     while (front < rear) {
-        struct node *curr = queue[front];
+        struct player_turn *curr = queue[front];
         int curr_id = ids[front];
         front++;
 
@@ -486,7 +508,7 @@ void export_tree_to_dot_stdout(struct node *root)
                t(curr->draw));
 
         // Left child
-        if (curr->left && rear < NODES_MAX_CAPACITY) {
+        if (curr->left && rear < TURNS_MAX) {
             int left_id = current_id++;
             printf("  node%d -> node%d [label=\"L\"];\n", curr_id, left_id);
 
@@ -496,7 +518,7 @@ void export_tree_to_dot_stdout(struct node *root)
         }
 
         // Right child
-        if (curr->right && rear < NODES_MAX_CAPACITY) {
+        if (curr->right && rear < TURNS_MAX) {
             int right_id = current_id++;
             printf("  node%d -> node%d [label=\"R\"];\n", curr_id, right_id);
 

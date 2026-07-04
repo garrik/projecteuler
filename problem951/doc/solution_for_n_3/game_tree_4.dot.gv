@@ -1,0 +1,26 @@
+# Sequence 4: RBRRBB
+
+digraph GameTree {
+  node [shape=ellipse, style=filled, fillcolor=lightgray];
+  node0 [label="Player 1 drew R"];
+  node0 -> node1 [label="L"];
+  node1 [label="Player 2 drew B"];
+  node1 -> node2 [label="L"];
+  node2 [label="Player 1 drew R"];
+  node2 -> node3 [label="L"];
+  node2 -> node4 [label="R"];
+  node3 [label="Player 2 drew R"];
+  node3 -> node5 [label="L"];
+  node4 [label="Player 1 drew R"];
+  node4 -> node6 [label="L"];
+  node5 [label="Player 1 drew B"];
+  node5 -> node7 [label="L"];
+  node5 -> node8 [label="R"];
+  node6 [label="Player 2 drew B"];
+  node6 -> node9 [label="L"];
+  node6 -> node10 [label="R"];
+  node7 [label="Player 2 drew B"];
+  node8 [label="Player 1 drew B"];
+  node9 [label="Player 1 drew B"];
+  node10 [label="Player 2 drew B"];
+}

@@ -1,0 +1,16 @@
+# Sequence 5: RBRBRB
+
+digraph GameTree {
+  node [shape=ellipse, style=filled, fillcolor=lightgray];
+  node0 [label="Player 1 drew R"];
+  node0 -> node1 [label="L"];
+  node1 [label="Player 2 drew B"];
+  node1 -> node2 [label="L"];
+  node2 [label="Player 1 drew R"];
+  node2 -> node3 [label="L"];
+  node3 [label="Player 2 drew B"];
+  node3 -> node4 [label="L"];
+  node4 [label="Player 1 drew R"];
+  node4 -> node5 [label="L"];
+  node5 [label="Player 2 drew B"];
+}

@@ -1,0 +1,20 @@
+# Sequence 27: BRBRBRBR
+
+digraph GameTree {
+  node [shape=ellipse, style=filled, fillcolor=lightgray];
+  node0 [label="Player 1 drew B"];
+  node0 -> node1 [label="L"];
+  node1 [label="Player 2 drew R"];
+  node1 -> node2 [label="L"];
+  node2 [label="Player 1 drew B"];
+  node2 -> node3 [label="L"];
+  node3 [label="Player 2 drew R"];
+  node3 -> node4 [label="L"];
+  node4 [label="Player 1 drew B"];
+  node4 -> node5 [label="L"];
+  node5 [label="Player 2 drew R"];
+  node5 -> node6 [label="L"];
+  node6 [label="Player 1 drew B"];
+  node6 -> node7 [label="L"];
+  node7 [label="Player 2 drew R"];
+}

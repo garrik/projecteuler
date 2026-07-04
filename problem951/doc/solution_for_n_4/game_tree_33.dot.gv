@@ -1,0 +1,48 @@
+# Sequence 33: BRRBBRBR
+
+digraph GameTree {
+  node [shape=ellipse, style=filled, fillcolor=lightgray];
+  node0 [label="Player 1 drew B"];
+  node0 -> node1 [label="L"];
+  node1 [label="Player 2 drew R"];
+  node1 -> node2 [label="L"];
+  node1 -> node3 [label="R"];
+  node2 [label="Player 1 drew R"];
+  node2 -> node4 [label="L"];
+  node3 [label="Player 2 drew R"];
+  node3 -> node5 [label="L"];
+  node4 [label="Player 2 drew B"];
+  node4 -> node6 [label="L"];
+  node4 -> node7 [label="R"];
+  node5 [label="Player 1 drew B"];
+  node5 -> node8 [label="L"];
+  node5 -> node9 [label="R"];
+  node6 [label="Player 1 drew B"];
+  node6 -> node10 [label="L"];
+  node7 [label="Player 2 drew B"];
+  node7 -> node11 [label="L"];
+  node8 [label="Player 2 drew B"];
+  node8 -> node12 [label="L"];
+  node9 [label="Player 1 drew B"];
+  node9 -> node13 [label="L"];
+  node10 [label="Player 2 drew R"];
+  node10 -> node14 [label="L"];
+  node11 [label="Player 1 drew R"];
+  node11 -> node15 [label="L"];
+  node12 [label="Player 1 drew R"];
+  node12 -> node16 [label="L"];
+  node13 [label="Player 2 drew R"];
+  node13 -> node17 [label="L"];
+  node14 [label="Player 1 drew B"];
+  node14 -> node18 [label="L"];
+  node15 [label="Player 2 drew B"];
+  node15 -> node19 [label="L"];
+  node16 [label="Player 2 drew B"];
+  node16 -> node20 [label="L"];
+  node17 [label="Player 1 drew B"];
+  node17 -> node21 [label="L"];
+  node18 [label="Player 2 drew R"];
+  node19 [label="Player 1 drew R"];
+  node20 [label="Player 1 drew R"];
+  node21 [label="Player 2 drew R"];
+}
